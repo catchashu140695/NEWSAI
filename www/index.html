@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <title>Tosh AI</title>
+  <style>
+    :root {
+      --background-color: #eee;
+      --navbar-bg-color: #f8f9fa;
+      --card-background-color: #fff;
+      --primary-text-color: #222;
+      --secondary-text-color: #444;
+    }
+
+    .dark {
+      --background-color: #111;
+      --navbar-bg-color: #343a40;
+      --card-background-color: #333;
+      --primary-text-color: #fff;
+      --secondary-text-color: #ddd;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--primary-text-color);      
+      overflow: hidden;
+    }
+
+    .navbar {
+      background-color: var(--navbar-bg-color);
+      height: 50px;
+    }
+
+    .card {
+      background-color: var(--card-background-color);
+      color: var(--primary-text-color);
+      height: calc(100vh - 75px);
+      /* 100% viewport height minus navbar height */
+    }
+    .span{      
+      color: var(--secondary-text-color);
+    }
+    .card-body {
+      color: var(--secondary-text-color);
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: var(--primary-text-color);
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover {
+      color: var(--secondary-text-color);
+    }
+
+    .navbar-light .navbar-toggler-icon {
+      background-color: var(--primary-text-color);
+    }
+
+    .navbar-light .navbar-toggler {
+      border-color: var(--primary-text-color);
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #loader img {
+      width: 150px;
+      height: 150px;
+      border: 0;
+      background: transparent;
+      border-radius: 50%;
+    }
+
+    .card {
+      border-radius: 10px;
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+      .botAnimation {
+        position: absolute;
+        left: 200px;
+        height: 250px;
+        width: 250px;
+        border: 0;
+        z-index: 99999;
+      }
+    }
+
+    /* Large screens (desktops and laptops) */
+    @media only screen and (min-width: 992px) {
+      .botAnimation {
+        position: absolute;
+        left: 140px;
+        height: 250px;
+        width: 250px;
+        border: 0;
+        z-index: 99999;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="content" style="height:100vh;overflow-y: scroll;overflow-x: hidden;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Quanta AI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Settings</a>
+            </li>
+            <li class="nav-item" hidden>
+              <button class="mt-1 btn btn-info" id="dark-mode-toggle"><i class="bi bi-sun"></i></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid ml-2 p-2">
+      <div class="row">
+        <div class="col-12">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add"
+                aria-selected="true">Add</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view"
+                aria-selected="false">View</a>
+            </li> 
+          </ul>
+          
+          
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+              <div class="card mt-3" style="background: transparent;">
+                <div class="card-body">                  
+                  <form id="fetchNewsForm">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label for="topic">Topic</label>
+                        <input type="text" class="form-control" id="topic" placeholder="Enter topic to fetch news">
+                      </div>
+                      <div class="col-md-2 mt-2">
+                        <br>
+                        <button type="submit" class="btn btn-primary">Fetch News</button>
+                      </div>
+                    </div>
+                  </form>
+                  <div id="newsCards" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="view" role="tabpanel" aria-labelledby="view-tab">
+              <div class="card mt-3">
+                <div class="card-body">
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <h5 class="card-title">View News Articles</h5>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-right"><a class="btn btn-success" id="startProcess">Start Bot</a></div>
+                    </div>
+                  </div>                 
+                 
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="newsTableBody">
+                      <tr><td colspan="4">No Records Found !!!</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add News Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <button class="btn btn-sm btn-info" id="btnCopyContent" onclick="copyContent()">Copy Content</button>
+              <button class="btn btn-sm btn-info" id="btnCopyTDT" onclick="copyTDT()">Copy TDT</button>
+            </div>            
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <span>Content</span>
+              <input type="text" class="form-control" id="txtContent" />
+            </div>
+            <div class="col-md-12">
+              <span>Youtube Title</span>
+              <input type="text" class="form-control" id="txtYoutubeTitle" />
+            </div>
+            <div class="col-md-12">
+              <span>Youtube Description</span>
+              <input type="text" class="form-control" id="txtYoutubeDescription" />
+            </div>
+            <div class="col-md-12">
+              <span>Youtube Tags</span>
+              <input type="text" class="form-control" id="txtYoutubeTags" />
+            </div>
+            <div class="col-md-12">
+              <span>Instagram Description</span>
+              <input type="text" class="form-control" id="txtInstagramDescription" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="add_news_to_db()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" value="0" id="hdnTitle" />
+  <input type="hidden" value="0" id="hdnDescription" />
+  <input type="hidden" value="0" id="hdnURL" />
+  <input type="hidden" value="0" id="hdnImageURL" />
+
+
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/eel.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeToggle = document.getElementById('dark-mode-toggle');
+      const navbar = document.querySelector('.navbar');
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+      // Function to toggle dark mode
+      function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+        navbar.classList.toggle('navbar-light');
+        navbar.classList.toggle('bg-light');
+        navbar.classList.toggle('navbar-dark');
+        navbar.classList.toggle('bg-dark');
+        // Store dark mode preference in localStorage
+        localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+      }
+
+      // Set initial mode based on localStorage
+      if (isDarkMode) {
+        toggleDarkMode();
+      }
+
+      // Event listener for dark mode toggle button
+      darkModeToggle.addEventListener('click', toggleDarkMode);
+
+      // Handle form submission for fetching news
+      document.getElementById('fetchNewsForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const topic = document.getElementById('topic').value;
+      eel.fetch_news(topic)(function (newsArticles) {
+        const newsCards = document.getElementById('newsCards');
+        newsCards.innerHTML = '';
+        let html = '<div class="row">';
+
+    
+
+    newsArticles.forEach(article => {
+  // Function to replace special characters
+  const sanitizeString = (str) => {
+    return str.replace(/[^a-zA-Z0-9 ]/g, '');
+  };
+
+  // Sanitize title and description
+  const sanitizedTitle = sanitizeString(article.title);
+  const sanitizedDescription = sanitizeString(article.description);
+
+  // Check if url_to_image is not null, not empty, and ends with .jpg
+  if (article.url_to_image && article.url_to_image.endsWith('.jpg')) {
+    html += `
+      <div class="col-md-3">
+        <div class="card" style="height:550px;padding:5px;margin-top:15px;">
+          <img src="${article.url_to_image}" style="height:180px;" class="card-img-top" alt="...">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${sanitizedTitle}</h5>
+            <p class="card-text">${sanitizedDescription}</p>
+            <div class="mt-auto row">
+              <a href="${article.url}" class="btn btn-info col-md-6" target="_blank">Read more</a>
+              <button class="btn btn-success btn-sm col-md-6" onclick="AddModal('${sanitizedTitle}', '${sanitizedDescription}', '${article.url}', '${article.url_to_image}')">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+});
+
+
+
+    html += '</div>';
+    newsCards.innerHTML = html;   
+  });
+});
+
+
+      // Function to fetch and display added news articles
+      function fetchAndDisplayAddedNews() {
+        eel.get_added_news()(function (newsArticles) {
+          const newsTableBody = document.getElementById('newsTableBody');
+          newsTableBody.innerHTML = '';
+          newsArticles.forEach(article => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${article.title}</td>
+              <td>${article.description}</td>
+              <td><img src="${article.url_to_image}" alt="News Image" style="width: 100px;"></td>
+              <td>
+                <button class="btn btn-danger btn-sm delete-article" data-id="${article.NewsId}">Delete</button>
+              </td>
+            `;
+            newsTableBody.appendChild(row);
+          });
+
+          // Add event listeners to delete buttons
+          document.querySelectorAll('.delete-article').forEach(button => {
+            button.addEventListener('click', function () {
+              const newsId = this.getAttribute('data-id');
+              eel.delete_news_from_db(newsId)(function (response) {
+                if (response === "Success") {
+                  
+                  fetchAndDisplayAddedNews();
+                  Swal.fire({
+                title: 'Hurray',
+                text: 'News Deleted Successfully !!!',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+              });
+                } else {
+                  Swal.fire({
+                title: 'Hurray',
+                text: 'Failure deleting News !!!',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              });
+                }
+              });
+            });
+          });
+        });
+      }
+
+      // Fetch and display added news articles when the "View" tab is shown
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if (e.target.id === 'view-tab') {
+          fetchAndDisplayAddedNews();
+        }
+      });
+
+    });
+
+    function AddModal(title,description,url,url_to_image){   
+      $('#hdnTitle').val(title);
+      $('#hdnDescription').val(description);
+      $('#hdnURL').val(url);
+      $('#hdnImageURL').val(url_to_image);   
+      $('#AddModal').modal("show");
+      
+    }
+
+    function copyToClipboard(text) {
+            var textToCopy = text;
+            navigator.clipboard.writeText(textToCopy).then(function() {
+              Swal.fire({
+                title: 'Hurray',
+                text: 'Copied to clipboard !!!',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+              });
+            }, function(err) {
+              Swal.fire({
+                title: 'Oops',
+                text: 'Failed to Copy text !!!',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              });
+            });
+        }
+
+    function copyContent(NewsDescription){      
+      NewsDescription=$('#hdnDescription').val();
+      var textToCopy = "consider you are a new anchor no  name needed. write a news summary in hindi for about 30 seconds for the news :" + NewsDescription    
+      copyToClipboard(textToCopy);
+    }
+
+    function copyTDT(){
+      NewsDescription=$('#hdnDescription').val();
+      var textToCopy = "consider you are a youtuber. write Search Engine Optimised youtube title, description, youtube tags, instagraam description including hashtags for the news :" + NewsDescription + ". Youtube Tags should be comma separated.";
+      copyToClipboard(textToCopy);
+    }
+    function add_news_to_db(){
+      var title=$('#hdnTitle').val();
+      var description=$('#txtContent').val();
+      var url=$('#hdnURL').val();
+      var ImageUrl=$('#hdnImageURL').val();
+      var youtubeTitle=$('#txtYoutubeTitle').val();
+      var youtubeDescription=$('#txtYoutubeDescription').val();
+      var youtubeTags=$('#txtYoutubeTags').val();
+      var instagramDescription=$('#txtInstagramDescription').val(); 
+     
+      
+      eel.add_news_to_db(title, description, url, ImageUrl, youtubeTitle, youtubeDescription, youtubeTags, instagramDescription)(function (response) {
+          if (response === "Success") {
+            $('#hdnTitle').val('');
+            $('#hdnDescription').val('');
+            $('#hdnURL').val('');
+            $('#hdnImageURL').val('');
+            $('#txtYoutubeTitle').val('');
+            $('#txtYoutubeDescription').val('');
+            $('#txtYoutubeTags').val('');
+            $('#txtInstagramDescription').val(''); 
+            $('#txtContent').val('');
+            $('#AddModal').modal("hide");
+            
+            Swal.fire({
+                title: 'Hurray',
+                text: 'News Added Successfully !!!',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+              });
+          } else {
+            Swal.fire({
+                title: 'Oops',
+                text: 'Fail to add News !!!',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              });
+          }
+        });
+    }
+
+    $('#startProcess').click(function(){
+      
+      Swal.fire({
+                title: 'Hurray',
+                text: 'Bot process started !!!',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+              });
+      eel.startProcess();
+    });
+  </script>
+</body>
+
+</html>
