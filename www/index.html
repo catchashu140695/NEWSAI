@@ -29,7 +29,7 @@
 
     body {
       background-color: var(--background-color);
-      color: var(--primary-text-color);      
+      color: var(--primary-text-color);
       overflow: hidden;
     }
 
@@ -44,9 +44,11 @@
       height: calc(100vh - 75px);
       /* 100% viewport height minus navbar height */
     }
-    .span{      
+
+    .span {
       color: var(--secondary-text-color);
     }
+
     .card-body {
       color: var(--secondary-text-color);
     }
@@ -129,7 +131,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="#">Dashboard</a>
             </li>
             <li class="nav-item">
@@ -137,7 +139,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Settings</a>
-            </li>
+            </li> -->
             <li class="nav-item" hidden>
               <button class="mt-1 btn btn-info" id="dark-mode-toggle"><i class="bi bi-sun"></i></button>
             </li>
@@ -156,14 +158,14 @@
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view"
                 aria-selected="false">View</a>
-            </li> 
+            </li>
           </ul>
-          
-          
+
+
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
               <div class="card mt-3" style="background: transparent;">
-                <div class="card-body">                  
+                <div class="card-body">
                   <form id="fetchNewsForm">
                     <div class="row">
                       <div class="col-md-4">
@@ -190,8 +192,8 @@
                     <div class="col-md-6">
                       <div class="text-right"><a class="btn btn-success" id="startProcess">Start Bot</a></div>
                     </div>
-                  </div>                 
-                 
+                  </div>
+
                   <table class="table">
                     <thead>
                       <tr>
@@ -202,7 +204,9 @@
                       </tr>
                     </thead>
                     <tbody id="newsTableBody">
-                      <tr><td colspan="4">No Records Found !!!</td></tr>
+                      <tr>
+                        <td colspan="4">No Records Found !!!</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -214,8 +218,9 @@
     </div>
   </div>
 
-  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Add News Details</h5>
@@ -228,28 +233,30 @@
             <div class="col-md-12 text-center">
               <button class="btn btn-sm btn-info" id="btnCopyContent" onclick="copyContent()">Copy Content</button>
               <button class="btn btn-sm btn-info" id="btnCopyTDT" onclick="copyTDT()">Copy TDT</button>
-            </div>            
+              <button class="btn btn-sm btn-info" id="btnCopyTDT" onclick="AutoFill()">Auto Fill</button>
+              
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <span>Content</span>
-              <input type="text" class="form-control" id="txtContent" />
+              <textarea  class="form-control" id="txtContent" style="height: 150px;"></textarea>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <span>Youtube Title</span>
-              <input type="text" class="form-control" id="txtYoutubeTitle" />
+              <textarea  class="form-control" id="txtYoutubeTitle" style="height: 150px;"></textarea>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <span>Youtube Description</span>
-              <input type="text" class="form-control" id="txtYoutubeDescription" />
+              <textarea  class="form-control" id="txtYoutubeDescription" style="height: 150px;"></textarea>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <span>Youtube Tags</span>
-              <input type="text" class="form-control" id="txtYoutubeTags" />
+              <textarea  class="form-control" id="txtYoutubeTags" style="height: 150px;"></textarea>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <span>Instagram Description</span>
-              <input type="text" class="form-control" id="txtInstagramDescription" />
+              <textarea class="form-control" id="txtInstagramDescription" style="height: 150px;"></textarea>
             </div>
           </div>
         </div>
@@ -266,7 +273,7 @@
   <input type="hidden" value="0" id="hdnImageURL" />
 
 
-  
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -280,6 +287,7 @@
       const darkModeToggle = document.getElementById('dark-mode-toggle');
       const navbar = document.querySelector('.navbar');
       const isDarkMode = localStorage.getItem('darkMode') === 'true';
+
 
       // Function to toggle dark mode
       function toggleDarkMode() {
@@ -300,30 +308,36 @@
       // Event listener for dark mode toggle button
       darkModeToggle.addEventListener('click', toggleDarkMode);
 
+      fetchNews("Bollywood");
       // Handle form submission for fetching news
       document.getElementById('fetchNewsForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-      const topic = document.getElementById('topic').value;
-      eel.fetch_news(topic)(function (newsArticles) {
-        const newsCards = document.getElementById('newsCards');
-        newsCards.innerHTML = '';
-        let html = '<div class="row">';
+        event.preventDefault();
+        const topic = document.getElementById('topic').value;
+        fetchNews(topic);
+      });
 
-    
+      function fetchNews(topic){
+        eel.fetch_news(topic)(function (newsArticles) {
+          const newsCards = document.getElementById('newsCards');
+          newsCards.innerHTML = '';
+          let html = '<div class="row">';
+          newsArticles.forEach(article => {
+            // Function to replace special characters
+            const sanitizeString = (str) => {
+              if (str) {
+                return str.replace(/[^a-zA-Z0-9 ]/g, '');
+              } else {
+                return ''; // or handle the null/undefined case as needed
+              }
+            };
 
-    newsArticles.forEach(article => {
-  // Function to replace special characters
-  const sanitizeString = (str) => {
-    return str.replace(/[^a-zA-Z0-9 ]/g, '');
-  };
+            // Sanitize title and description
+            const sanitizedTitle = sanitizeString(article.title);
+            const sanitizedDescription = sanitizeString(article.description);
 
-  // Sanitize title and description
-  const sanitizedTitle = sanitizeString(article.title);
-  const sanitizedDescription = sanitizeString(article.description);
-
-  // Check if url_to_image is not null, not empty, and ends with .jpg
-  if (article.url_to_image && article.url_to_image.endsWith('.jpg')) {
-    html += `
+            // Check if url_to_image is not null, not empty, and ends with .jpg
+            if (article.url_to_image && article.url_to_image.endsWith('.jpg')) {
+              html += `
       <div class="col-md-3">
         <div class="card" style="height:550px;padding:5px;margin-top:15px;">
           <img src="${article.url_to_image}" style="height:180px;" class="card-img-top" alt="...">
@@ -338,17 +352,15 @@
         </div>
       </div>
     `;
-  }
-});
+            }
+          });
 
 
 
-    html += '</div>';
-    newsCards.innerHTML = html;   
-  });
-});
-
-
+          html += '</div>';
+          newsCards.innerHTML = html;
+        });
+      }
       // Function to fetch and display added news articles
       function fetchAndDisplayAddedNews() {
         eel.get_added_news()(function (newsArticles) {
@@ -373,21 +385,21 @@
               const newsId = this.getAttribute('data-id');
               eel.delete_news_from_db(newsId)(function (response) {
                 if (response === "Success") {
-                  
+
                   fetchAndDisplayAddedNews();
                   Swal.fire({
-                title: 'Hurray',
-                text: 'News Deleted Successfully !!!',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-              });
+                    title: 'Hurray',
+                    text: 'News Deleted Successfully !!!',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  });
                 } else {
                   Swal.fire({
-                title: 'Hurray',
-                text: 'Failure deleting News !!!',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-              });
+                    title: 'Hurray',
+                    text: 'Failure deleting News !!!',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                  });
                 }
               });
             });
@@ -404,94 +416,127 @@
 
     });
 
-    function AddModal(title,description,url,url_to_image){   
+    function AddModal(title, description, url, url_to_image) {
       $('#hdnTitle').val(title);
       $('#hdnDescription').val(description);
       $('#hdnURL').val(url);
-      $('#hdnImageURL').val(url_to_image);   
+      $('#hdnImageURL').val(url_to_image);
       $('#AddModal').modal("show");
-      
+
     }
 
     function copyToClipboard(text) {
-            var textToCopy = text;
-            navigator.clipboard.writeText(textToCopy).then(function() {
-              Swal.fire({
-                title: 'Hurray',
-                text: 'Copied to clipboard !!!',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-              });
-            }, function(err) {
-              Swal.fire({
-                title: 'Oops',
-                text: 'Failed to Copy text !!!',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-              });
-            });
-        }
-
-    function copyContent(NewsDescription){      
-      NewsDescription=$('#hdnDescription').val();
-      var textToCopy = "consider you are a new anchor no  name needed. write a news summary in hindi for about 30 seconds for the news :" + NewsDescription    
-      copyToClipboard(textToCopy);
-    }
-
-    function copyTDT(){
-      NewsDescription=$('#hdnDescription').val();
-      var textToCopy = "consider you are a youtuber. write Search Engine Optimised youtube title, description, youtube tags, instagraam description including hashtags for the news :" + NewsDescription + ". Youtube Tags should be comma separated.";
-      copyToClipboard(textToCopy);
-    }
-    function add_news_to_db(){
-      var title=$('#hdnTitle').val();
-      var description=$('#txtContent').val();
-      var url=$('#hdnURL').val();
-      var ImageUrl=$('#hdnImageURL').val();
-      var youtubeTitle=$('#txtYoutubeTitle').val();
-      var youtubeDescription=$('#txtYoutubeDescription').val();
-      var youtubeTags=$('#txtYoutubeTags').val();
-      var instagramDescription=$('#txtInstagramDescription').val(); 
-     
-      
-      eel.add_news_to_db(title, description, url, ImageUrl, youtubeTitle, youtubeDescription, youtubeTags, instagramDescription)(function (response) {
-          if (response === "Success") {
-            $('#hdnTitle').val('');
-            $('#hdnDescription').val('');
-            $('#hdnURL').val('');
-            $('#hdnImageURL').val('');
-            $('#txtYoutubeTitle').val('');
-            $('#txtYoutubeDescription').val('');
-            $('#txtYoutubeTags').val('');
-            $('#txtInstagramDescription').val(''); 
-            $('#txtContent').val('');
-            $('#AddModal').modal("hide");
-            
-            Swal.fire({
-                title: 'Hurray',
-                text: 'News Added Successfully !!!',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-              });
-          } else {
-            Swal.fire({
-                title: 'Oops',
-                text: 'Fail to add News !!!',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-              });
-          }
+      var textToCopy = text;
+      navigator.clipboard.writeText(textToCopy).then(function () {
+        Swal.fire({
+          title: 'Hurray',
+          text: 'Copied to clipboard !!!',
+          icon: 'success',
+          confirmButtonText: 'Ok'
         });
+      }, function (err) {
+        Swal.fire({
+          title: 'Oops',
+          text: 'Failed to Copy text !!!',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
+      });
     }
 
-    $('#startProcess').click(function(){
+    function copyContent() {
+      NewsTitle=$('#hdnTitle').val();
+      NewsDescription = $('#hdnDescription').val();
+      NewsUrl=$('#hdnURL').val();
+      eel.get_website_content(NewsUrl)(function (response) {
+        var textToCopy = "write a summary in hindi for about 30 seconds for - :" + response 
+        copyToClipboard(textToCopy);
+      });      
+    }
+
+    function copyTDT() {
+      NewsTitle=$('#hdnTitle').val();
+      NewsDescription = $('#hdnDescription').val();
+      var textToCopy = "consider you are a youtuber. write Search Engine Optimised youtube title, description, youtube tags, instagraam description including hashtags in english language for the news having title :" + NewsTitle + " and having description :" + NewsDescription + ". Youtube Tags should be comma separated.";
+      copyToClipboard(textToCopy);
+    }
+
+    function AutoFill(){
+      NewsTitle=$('#hdnTitle').val();
+      NewsDescription = $('#hdnDescription').val();
+      NewsUrl=$('#hdnURL').val();
+      var content="Answer Consizely: write summary in hindi for 30 seconds for news " + NewsUrl
+      var title="Answer Consizely: write youtube title in english for news " + NewsTitle + NewsDescription
+      var description="Answer Consizely: write youtube description in english for news " + NewsTitle + NewsDescription
+      var tags="Answer Consizely: write youtube tags separated by comma for news " + NewsTitle + NewsDescription
+      var instagramDespcription="Answer Consizely: write instagram description in english along with hash tags for news " + NewsTitle + NewsDescription
       
+      eel.gpt_client(content)(function (response) {
+        $('#txtContent').val(response.replace('"',''));
+      }); 
+      eel.gpt_client(title)(function (response) {
+        $('#txtYoutubeTitle').val(response.replace('"',''));
+      });  
+      eel.gpt_client(description)(function (response) {
+        $('#txtYoutubeDescription').val(response.replace('"',''));
+      }); 
+      eel.gpt_client(tags)(function (response) {
+        $('#txtYoutubeTags').val(response.replace('"',''));
+      }); 
+      eel.gpt_client(instagramDespcription)(function (response) {
+        $('#txtInstagramDescription').val(response.replace('"',''));
+      });  
+    }
+
+    function add_news_to_db() {
+      var title = $('#hdnTitle').val();
+      var description = $('#txtContent').val();
+      var url = $('#hdnURL').val();
+      var ImageUrl = $('#hdnImageURL').val();
+      var youtubeTitle = $('#txtYoutubeTitle').val();
+      var youtubeDescription = $('#txtYoutubeDescription').val();
+      var youtubeTags = $('#txtYoutubeTags').val();
+      var instagramDescription = $('#txtInstagramDescription').val();
+
+
+      eel.add_news_to_db(title, description, url, ImageUrl, youtubeTitle, youtubeDescription, youtubeTags, instagramDescription)(function (response) {
+        if (response === "Success") {
+          $('#hdnTitle').val('');
+          $('#hdnDescription').val('');
+          $('#hdnURL').val('');
+          $('#hdnImageURL').val('');
+          $('#txtYoutubeTitle').val('');
+          $('#txtYoutubeDescription').val('');
+          $('#txtYoutubeTags').val('');
+          $('#txtInstagramDescription').val('');
+          $('#txtContent').val('');
+          $('#AddModal').modal("hide");
+
+          Swal.fire({
+            title: 'Hurray',
+            text: 'News Added Successfully !!!',
+            icon: 'success',
+            confirmButtonText: 'Ok'
+          });
+        } else {
+          Swal.fire({
+            title: 'Oops',
+            text: 'Fail to add News !!!',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+        }
+      });
+    }
+
+    $('#startProcess').click(function () {
+
       Swal.fire({
-                title: 'Hurray',
-                text: 'Bot process started !!!',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-              });
+        title: 'Hurray',
+        text: 'Bot process started !!!',
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      });
       eel.startProcess();
     });
   </script>

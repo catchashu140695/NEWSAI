@@ -19,9 +19,37 @@ from db_connection import DatabaseConnection
 import random
 from pydub import AudioSegment
 from pydub.silence import split_on_silence, detect_silence
+from bs4 import BeautifulSoup
+from g4f.client import Client
 
+@eel.expose("gpt_client")
+def gpt_client(prompt):
+        client = Client()        
+        # Create a chat completion request
+        response =  client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )      
+        
+        return response.choices[0].message.content
 
+@eel.expose("get_website_content")
+def get_website_content(url):
+    try:
+        # Send a GET request to the URL
+        response = requests.get(url)
+        response.raise_for_status()  # Check if the request was successful
 
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Extract the text from the website content
+        content = soup.get_text()
+
+        return content
+
+    except requests.exceptions.RequestException as e:
+        return f"An error occurred: {e}"
 
 @eel.expose("fetch_news")
 def fetch_news(topic="bollywood"):

@@ -3,3 +3,5 @@ pip install pyodbc
 pip install newsapi-python
 pip install moviepy
 pip install eel
+pip install yt-dlp
+pip install -U g4f[all]
